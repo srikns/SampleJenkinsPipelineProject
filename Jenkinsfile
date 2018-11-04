@@ -1,9 +1,20 @@
 node {
    def mvnHome
    stage('Checkout') { // for display purposes
-      echo "branch is ${branch}"
-      git 'https://github.com/srikns/SampleJenkinsPipelineProject.git'
+
+        echo "branch is ${branch}"
+
+        def exists = fileExists '${branch}'
+        if (!exists){
+            new File('$branch').mkdir()
+       }
+
+       dir ('${branch}') {
+            git branch: '${branch}',
+                url: 'https://github.com/srikns/SampleJenkinsPipelineProject.git'
+      }
       mvnHome = tool 'M2'
+
    }
    stage('Build') {
       echo "Build"
